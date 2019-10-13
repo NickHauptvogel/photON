@@ -1,2 +1,2 @@
 # photON
-Smart Bike Light using a Microcontroller and Neopixel LEDs
+Smart Bike Light using an ESP8266 and Neopixel LEDs

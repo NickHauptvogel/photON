@@ -1,0 +1,195 @@
+<html>
+    <head>
+        <title>Project photON</title>
+        <style>
+            body {
+                font-family: Montserrat, Helvetica, Arial, sans-serif;
+                background-color: #222222;
+            }
+
+            h1 {
+                text-align: center;
+                color: white;
+            }
+
+            div.container {
+                width: 95vw;
+                height: 200px;
+                margin-top: 20px;
+                margin: 0 auto;
+            }
+
+            div.lrButton {
+                background-color: #e07f00;
+                width: 49%;
+                color: white;
+                border-radius: 50px;
+                font-size: 72pt;
+                text-align: center;
+                float: left;
+                line-height: 200px;
+            }
+
+            div.frontButton {
+                background-color: white;
+                width: 95vw;
+                height: 200px;
+                color: black;
+                border-radius: 50px;
+                font-size: 72pt;
+                text-align: center;
+                margin: 0 auto;
+                margin-top: 20px;
+                line-height: 200px;
+            }
+
+            div.backButton {
+                background-color: rgb(160, 0, 0);
+                width: 95vw;
+                height: 200px;
+                color: white;
+                border-radius: 50px;
+                font-size: 72pt;
+                text-align: center;
+                margin: 0 auto;
+                margin-top: 20px;
+                line-height: 200px;
+            }
+        </style>
+
+        <script type="text/javascript" language="javascript">
+
+            var brakecnt = 0;
+            function accelerometerUpdate(event) {
+              var aY = event.acceleration.y;
+              var url_string = window.location.href;
+              var url = new URL(url_string);
+              var brakeState = url.searchParams.get("brake");
+              if(aY < -4) {
+                brakecnt = 0;
+                if(brakeState != "true") {
+                  insertParam("brake", "true");
+                }
+              } else {
+                if(brakeState == "true") brakecnt++;
+              }
+              if(brakecnt >= 500 && brakeState == "true") {
+                brakecnt = 0;
+                insertParam("brake", "false");
+              }
+            }
+
+            function init() {
+                window.addEventListener("devicemotion", accelerometerUpdate, true);
+                var url_string = window.location.href;
+                var url = new URL(url_string);
+                var blinkState = url.searchParams.get("blink");
+                var frontState = url.searchParams.get("front");
+                var backState = url.searchParams.get("back");
+
+                if (blinkState == "left") {
+                    document.getElementById("buttonLeft").style.background = "yellow";
+                    document.getElementById("buttonLeft").style.color = "black";
+                    document.getElementById("buttonRight").style.background = "#e07f00";
+                    document.getElementById("buttonRight").style.color = "white";
+                } else if (blinkState == "right") {
+                    document.getElementById("buttonLeft").style.background = "#e07f00";
+                    document.getElementById("buttonLeft").style.color = "white";
+                    document.getElementById("buttonRight").style.background = "yellow";
+                    document.getElementById("buttonRight").style.color = "black";
+                } else {
+                    document.getElementById("buttonLeft").style.background = "#e07f00";
+                    document.getElementById("buttonLeft").style.color = "white";
+                    document.getElementById("buttonRight").style.background = "#e07f00";
+                    document.getElementById("buttonRight").style.color = "white";
+                }
+
+                if (frontState == "off") {
+                    document.getElementById("buttonFront").style.background = "#666666";
+                    document.getElementById("buttonFront").style.color = "white";
+                } else {
+                    document.getElementById("buttonFront").style.background = "white";
+                    document.getElementById("buttonFront").style.color = "black";
+                }
+
+                if (backState == "off") {
+                    document.getElementById("buttonBack").style.background = "rgb(100, 0, 0)";
+                    document.getElementById("buttonBack").style.color = "black";
+                } else {
+                    document.getElementById("buttonBack").style.background = "rgb(160, 0, 0)";
+                    document.getElementById("buttonBack").style.color = "white";
+                }
+            }
+
+            function insertParam(key, value){
+                key = encodeURI(key);
+                value = encodeURI(value);
+                var kvp = document.location.search.substr(1).split('&');
+                var i=kvp.length; var x; while(i--) {
+                    x = kvp[i].split('=');
+                    if (x[0]==key)
+                    {
+                        x[1] = value;
+                        kvp[i] = x.join('=');
+                        break;
+                    }
+                }
+                if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+                document.location.search = kvp.join('&');
+            }
+
+            function toggle(key, togglevalue, offvalue) {
+              var url_string = window.location.href;
+              var url = new URL(url_string);
+              var currState = url.searchParams.get(key);
+              if (currState == togglevalue) {
+                  insertParam(key, offvalue);
+              } else {
+                  insertParam(key, togglevalue);
+              }
+            }
+
+            function flashBack(){
+              document.getElementById("buttonBack").style.background = "rgb(160, 0, 0)";
+            }
+
+            function setBackRed(){
+              document.getElementById("buttonBack").style.background = "rgb(100, 0, 0)";
+            }
+
+            function blinkLeft(){
+              toggle("blink", "left", "off");
+            }
+
+            function blinkRight(){
+              toggle("blink", "right", "off");
+            }
+
+            function frontTrigger(){
+              toggle("front", "on", "off");
+            }
+
+            function backTrigger(){
+              toggle("back", "on", "off");
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <div class="container">
+                <div class="lrButton" id="buttonLeft" onclick="blinkLeft();">
+                    &lt;
+                </div>
+                <div class="lrButton" style="float: right" id="buttonRight" onclick="blinkRight();">
+                    &gt;
+                </div>
+        </div>
+
+        <div class="frontButton" id="buttonFront" onclick="frontTrigger()">
+            FRONT
+        </div>
+
+        <div class="backButton" id="buttonBack" onclick="backTrigger()">
+            BACK
+        </div>
+    </body>
+</html>

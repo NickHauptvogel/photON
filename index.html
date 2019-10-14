@@ -55,6 +55,17 @@
                 margin-top: 20px;
                 line-height: 200px;
             }
+            div.brakeButton {
+                width: 95vw;
+                height: 200px;
+                color: white;
+                border-radius: 50px;
+                font-size: 72pt;
+                text-align: center;
+                margin: 0 auto;
+                margin-top: 20px;
+                line-height: 200px;
+            }
         </style>
 
         <script type="text/javascript" language="javascript">
@@ -65,7 +76,13 @@
               var url_string = window.location.href;
               var url = new URL(url_string);
               var brakeState = url.searchParams.get("brake");
-              if(aY < -4) {
+              var brakeLimit = url.searchParams.get("brakeLimit");
+              var brakeLimitInt = parseInt(brakeLimit);
+              if(brakeLimitInt == NaN) {
+                brakeLimitInt = -8;
+              }
+              document.getElementById("buttonBrake").innerHTML = brakeLimitInt;
+              if(aY < brakeLimitInt) {
                 brakecnt = 0;
                 if(brakeState != "true") {
                   insertParam("brake", "true");
@@ -86,6 +103,7 @@
                 var blinkState = url.searchParams.get("blink");
                 var frontState = url.searchParams.get("front");
                 var backState = url.searchParams.get("back");
+                var brakeState = url.searchParams.get("brake");
 
                 if (blinkState == "left") {
                     document.getElementById("buttonLeft").style.background = "yellow";
@@ -118,6 +136,13 @@
                 } else {
                     document.getElementById("buttonBack").style.background = "rgb(160, 0, 0)";
                     document.getElementById("buttonBack").style.color = "white";
+                }
+                if (brakeState == "false") {
+                  document.getElementById("buttonBrake").style.background = "rgb(100, 0, 0)";
+                  document.getElementById("buttonBrake").style.color = "black";
+                } else {
+                  document.getElementById("buttonBrake").style.background = "rgb(160, 0, 0)";
+                  document.getElementById("buttonBrake").style.color = "black";
                 }
             }
 
@@ -191,5 +216,6 @@
         <div class="backButton" id="buttonBack" onclick="backTrigger()">
             BACK
         </div>
+        <div class="brakeButton" id="buttonBrake"></div>
     </body>
 </html>

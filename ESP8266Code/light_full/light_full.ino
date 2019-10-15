@@ -233,8 +233,10 @@ String html ="<html> <head> <title>Project photON</title> <style> body { font-fa
 
 void _blink(boolean left) {
 	
-    int brightness[BLINKSTEPS];
-	int brightnessSize = sizeof(brightness)/sizeof(int);
+	int brightness[BLINKSTEPS];
+  //set array to zero
+  memset(brightness,0,sizeof(brightness));
+  int brightnessSize = sizeof(brightness)/sizeof(int);
 	int peakConsistent = PEAK * ANIMATION_DELTA;
 	boolean notAsc = true;
 	boolean notDesc = true;
@@ -250,9 +252,6 @@ void _blink(boolean left) {
     }
 
 	for (int h = 0; h < 2*PEAK+brightnessSize-1; h++) {
-		//set array to zero
-		memset(brightness,0,sizeof(brightness));
-
 		notAsc = true;
 		notDesc = true;
 		peakReached = -1;

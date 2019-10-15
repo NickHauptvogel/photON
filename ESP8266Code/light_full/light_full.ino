@@ -40,6 +40,9 @@ int BLINKSTEPS = 5;
 // The brightness value that a step increases or decreases the brightness (x/255)
 int ANIMATION_DELTA = 10;
 
+// The peak multiplicator of the ANIMATION_DELTA for the animations
+int PEAK = 9;
+
 // Indices of the separate modules of the lighting (Stripes front and back, Ring back)
 int ring_left_animation_index[][2] = {{1, 9}, {2, 8}, {3, 7}, {4, 6}, {5, 5}};
 int ring_right_animation_index[][2] = {{1, 9}, {0, 10}, {15, 11}, {14, 12}, {13, 13}};
@@ -229,9 +232,14 @@ String html ="<html> <head> <title>Project photON</title> <style> body { font-fa
 }
 
 void _blink(boolean left) {
+	
     int brightness[BLINKSTEPS];
-    memset(brightness,0,sizeof(brightness));
-
+	int brightnessSize = sizeof(brightness)/sizeof(int);
+	int peakConsistent = PEAK * ANIMATION_DELTA;
+	boolean notAsc = true;
+	boolean notDesc = true;
+	int peakReached = -1;
+	
     // Clear half of back ring
     for (int h = 0; h < NUMBER_RING_HALF; h++) {
       if(left) {
@@ -241,31 +249,71 @@ void _blink(boolean left) {
       }  
     }
 
-    for(int i = 0; i < BLINKSTEPS; i++) {
-      brightness[i] = ANIMATION_DELTA;
-      for(int j = 0; j < i; j++) {
-        brightness[i-j-1] += ANIMATION_DELTA;
-      }
-      set_blink_leds(left, brightness, sizeof(brightness)/sizeof(int)); 
-    }
+	for (int h = 0; h < 2*PEAK+brightnessSize-1; h++) {
+		//set array to zero
+		memset(brightness,0,sizeof(brightness));
 
-    for (int l = 1; l < BLINKSTEPS; l++) {
-      brightness[l]=brightness[l-1];
-      for(int m=0; m<l; m++) {
-        brightness[l-m-1]-=ANIMATION_DELTA;
-      }
-      for(int n=0; n<BLINKSTEPS-1-l; n++) {
-        brightness[l+n+1]+=ANIMATION_DELTA;
-      }
-      set_blink_leds(left, brightness, sizeof(brightness)/sizeof(int)); 
-    }
+		notAsc = true;
+		notDesc = true;
+		peakReached = -1;
 
-    for(int o = 0; o < BLINKSTEPS; o++) {
-      for(int p = 0; p < BLINKSTEPS-o; p++) {
-        brightness[o+p] -= ANIMATION_DELTA;
-      }
-      set_blink_leds(left, brightness, sizeof(brightness)/sizeof(int)); 
-    }
+		for (int i = 0; i < brightnessSize; i++) {
+			if (brightness[i] == peakConsistent) {
+				// peak value present in array
+				peakReached = i;
+			} else if (notDesc && i > 0 && brightness[i] < brightness[i - 1]) {
+				// at least one pair is descending
+				notDesc = false;
+			} else if (notAsc && i > 0 && brightness[i] > brightness[i - 1]) {
+				// at least one pair is ascending
+				notAsc = false;
+			}
+		}
+
+		if (peakReached != -1) {
+			//peak reached
+			if (peakReached == brightnessSize - 1) {
+				// Initiate Counting down all values as peak does not have to be shifted right
+				notDesc = true;
+			} else {
+				// peak not on last position -> move peak one further by adding delta to the right and subtract to the left
+				for (int j = peakReached; j >= 0; j--) {
+					// count down value
+					brightness[j] -= ANIMATION_DELTA;
+					// if last value was decreased, exit loop as only 0's follow
+					if(brightness[j] == 0) break;
+				}
+				for (int k = peakReached + 1; k < brightnessSize; k++) {
+					// add Delta on the right side
+					brightness[k] += ANIMATION_DELTA;
+					// if delta was added to 0, no more delta has to be added to the right
+					if(brightness[k] == ANIMATION_DELTA) break;
+				}
+			}
+		}
+		if (peakReached == -1 && notAsc && notDesc) {
+			// no peak and only equal values (all 0's) -> count first value up (first step)
+			brightness[0] += ANIMATION_DELTA;
+		} else if (peakReached == -1 && notAsc) {
+			// no peak and not ascending --> only descending (start phase)
+			for (int l = 0; l < brightnessSize; l++) {
+				// count all values up as no peak is present
+				brightness[l] += ANIMATION_DELTA;
+				// if delta is added to 0, no more delta has to be added to the right
+				if(brightness[l] == ANIMATION_DELTA) break;
+			}
+		} else if (!notAsc && notDesc) {
+			// ascending and not descending, either peak on last position or not present -> count all down
+			for (int m = brightnessSize - 1; m >= 0; m--) {
+				// count down value
+				brightness[m] -= ANIMATION_DELTA;
+				// if last value was decreased, exit loop as only 0's follow
+				if(brightness[m] == 0) break;
+			}
+		}
+
+		set_blink_leds(left, brightness, brightnessSize); 
+	}
     
     delay(500);
 }

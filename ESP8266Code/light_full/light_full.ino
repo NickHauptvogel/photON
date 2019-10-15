@@ -365,13 +365,13 @@ void loop() {
     shut_down();
   }
   else if (server.arg("brake")=="true") {
-    if(back_state == back_on){
+    if(!brakeOn){
       set_color(ring_index, NUMBER_RING, bright_red);
       set_color(back_right_index, NUMBER_BACK, bright_red);
       set_color(back_left_index, NUMBER_BACK, bright_red); 
       pixels.show();
+	  brakeOn = true;
     }
-    brakeOn = true;
     return;
   }
   else if (server.arg("brake")=="false" && brakeOn == true) {
@@ -379,8 +379,12 @@ void loop() {
       set_color(ring_index, NUMBER_RING, red);
       set_color(back_right_index, NUMBER_BACK, red);
       set_color(back_left_index, NUMBER_BACK, red); 
-      pixels.show();
-    }
+    } else {
+	  clear_color(ring_index, NUMBER_RING);
+	  clear_color(back_right_index, NUMBER_BACK);
+	  clear_color(back_left_index, NUMBER_BACK);
+	}
+	pixels.show();
     brakeOn = false;
     return;
   }

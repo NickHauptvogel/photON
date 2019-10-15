@@ -98,6 +98,13 @@
 
             function init() {
                 window.addEventListener("devicemotion", accelerometerUpdate, true);
+
+                window.addEventListener("devicelight", function (event) {
+                var luminosity = event.value;
+
+                document.getElementById("lum").innerHTML = luminosity;
+
+                });
                 var url_string = window.location.href;
                 var url = new URL(url_string);
                 var blinkState = url.searchParams.get("blink");
@@ -217,5 +224,6 @@
             BACK
         </div>
         <div class="brakeButton" id="buttonBrake"></div>
+        <div class="brakeButton" id="lum"></div>
     </body>
 </html>

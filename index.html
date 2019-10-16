@@ -96,15 +96,52 @@
               }
             }
 
+            var lumOncnt = 0;
+            var lumOffcnt = 0;
+            function ambientLightUpdate(event) {
+              var luminosity = event.value;
+
+              var url_string = window.location.href;
+              var url = new URL(url_string);
+              var frontState = url.searchParams.get("front");
+              var backState = url.searchParams.get("back");
+
+              if(luminosity < 100) {
+                lumOncnt++;
+                lumOffcnt = 0;
+              }
+              else if(luminosity > 300) {
+                lumOffcnt++;
+                lumOncnt = 0;
+              }
+
+              document.getElementById("lum").innerHTML = luminosity + " " + lumOncnt + " " +lumOffcnt;
+
+              if(lumOncnt > 20) {
+                lumOncnt = 0;
+                lumOffcnt = 0;
+                if (frontState == "off") {
+                  insertParam("front", "on");
+                }
+                if (backState == "off") {
+                  insertParam("back", "on");
+                }
+              } else if (lumOffcnt > 20) {
+                lumOncnt = 0;
+                lumOffcnt = 0;
+                if (frontState == "on") {
+                  insertParam("front", "off");
+                }
+                if (backState == "on") {
+                  insertParam("back", "off");
+                }
+              }
+            }
+
             function init() {
                 window.addEventListener("devicemotion", accelerometerUpdate, true);
+                window.addEventListener("devicelight", ambientLightUpdate);
 
-                window.addEventListener("devicelight", function (event) {
-                var luminosity = event.value;
-
-                document.getElementById("lum").innerHTML = luminosity;
-
-                });
                 var url_string = window.location.href;
                 var url = new URL(url_string);
                 var blinkState = url.searchParams.get("blink");

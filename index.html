@@ -70,7 +70,7 @@
 
         <script type="text/javascript" language="javascript">
 
-            var brakecnt = 0;
+            var brakeOnCnt = 0;
             function accelerometerUpdate(event) {
               var aY = event.acceleration.y;
               var url_string = window.location.href;
@@ -79,21 +79,31 @@
               var brakeLimit = url.searchParams.get("brakeLimit");
               var brakeLimitInt = parseInt(brakeLimit);
               if(brakeLimitInt == NaN) {
-                brakeLimitInt = -8;
+                brakeLimitInt = -5;
               }
               document.getElementById("buttonBrake").innerHTML = brakeLimitInt;
               if(aY < brakeLimitInt) {
-                brakecnt = 0;
-                if(brakeState != "true") {
+                brakeOffCnt = 0;
+                brakeOnCnt++;
+              } 
+			  else if (aY > -1) {
+                brakeOnCnt = 0;
+				brakeOffCnt++;
+              }
+              if(brakeOnCnt > 50) {
+                brakeOnCnt = 0;
+				brakeOffCnt = 0;
+				if(brakeState != "true") {
                   insertParam("brake", "true");
                 }
-              } else {
-                if(brakeState == "true") brakecnt++;
-              }
-              if(brakecnt >= 500 && brakeState == "true") {
-                brakecnt = 0;
-                insertParam("brake", "false");
-              }
+              } 
+			  else if(brakeOffCnt > 200) {
+				brakeOnCnt = 0;
+				brakeOffCnt = 0;
+				if(brakeState != "false") {
+                  insertParam("brake", "false");
+                }
+			  }
             }
 
             var lumOncnt = 0;

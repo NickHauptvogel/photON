@@ -34,6 +34,10 @@ For the project, you need:
 
 1. Cut your LEDs to the desired length (I cut the strip in 2x 10 LEDs for the front and 2x 3 LEDs for the back in addition to the ring)
 2. Plan out your placement and measure the distance for the wire to run from one LED part to the next. **CAUTION: When measuring the distance from front to back, consider doing so with maximum steering angle so that the wire is long enough in any case**
+My setup (the black connection represents the compound of 5V, GND and data):
+
+![bike](https://github.com/NickHauptvogel/photON/blob/master/common/bike.png)
+
 3. Cut the stranded wires to the lengths, unstrip the ends and solder them onto the LED contacts. **Thread the shrinking tubes onto the stranded wire compound before soldering**
 4. On each soldering spot, apply a big drop of hot glue and spread it across the soldered spot. Repeat this from the bottom, so that the hot glue surrounds the complete soldering point.
 5. Shrink the tube as close to the soldering point as possible with a lighter.
@@ -42,3 +46,17 @@ For the project, you need:
 ![backstrip](https://github.com/NickHauptvogel/photON/blob/master/common/IMG_20191029_121302.jpg)
 ![frontstrip](https://github.com/NickHauptvogel/photON/blob/master/common/IMG_20191029_121351.jpg)
 
+I mounted the LED ring to the bag and secured the bag with my conventional back light. Before that, I wrapped the non-waterproof ring in adhesive tape to make it at least a bit water-resistant under the saddle:
+
+![frontstrip](https://github.com/NickHauptvogel/photON/blob/master/common/IMG_20191029_121103.jpg)
+
+7. Wrap all cables with electrical tape to give them extra protection and tie them to the frame.
+8. Solder the 5V Cable to "VIN" of the NodeMCU, GND to any "GND" and Data to "D6".
+9. Place the powerbank into the saddle pocket.
+
+![saddlepocketopen](https://github.com/NickHauptvogel/photON/blob/master/common/IMG_20191029_121204.jpg)
+![saddlepocket](https://github.com/NickHauptvogel/photON/blob/master/common/IMG_20191029_121132.jpg)
+
+10. Done! Proceed to software setup!
+
+## Software setup

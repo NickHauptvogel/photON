@@ -10,7 +10,7 @@ After the building process, you will find my example code featuring startup anim
 ## Hardware setup
 ### Shopping list
 
-
+![requirements](https://github.com/NickHauptvogel/photON/blob/master/common/IMG_20191029_122453.jpg)
 
 For the project, you need:
 - ESP8266 Microcontroller: I used the NodeMCU Lua Amica Modul V2 ESP8266 ESP-12E WIFI, as it can be directly flashed via micro-USB and can handle input voltages above 3.3V (the powerbank has a 5V output)
@@ -19,7 +19,7 @@ For the project, you need:
 
 - saddle bag: A small pocket to fit your microcontroller, power bank and (for me) mount the back-LEDs to.
 
-- Neopixel LEDs: You don't have to use original Neopixel LEDs (that are much more expensive) and easily get some from eBay, only be aware that the colors can be a little bit different. **Important: The Neopixels must have the WS2812(B) Chipset.** I got a Neopixel Ring (16 LEDs) and a 1m strip that I cut through.
+- Neopixel LEDs: You don't have to use original Neopixel LEDs (that are much more expensive) and easily get some from eBay, only be aware that the colors can be a little bit different. **Important: The Neopixels must have the WS2812(B) Chipset.** I got a Neopixel Ring (16 LEDs) and a waterproof 1m strip that I cut through.
 
 - Shrinking tubes
 
@@ -28,3 +28,17 @@ For the project, you need:
 - stranded wire (preferably in 3 colors: 5V, GND, Data)
 
 - Accessories: adhesive tape, cable ties, cable stripper, hot glue gun
+
+
+### Bike mounting
+
+1. Cut your LEDs to the desired length (I cut the strip in 2x 10 LEDs for the front and 2x 3 LEDs for the back in addition to the ring)
+2. Plan out your placement and measure the distance for the wire to run from one LED part to the next. **CAUTION: When measuring the distance from front to back, consider doing so with maximum steering angle so that the wire is long enough in any case**
+3. Cut the stranded wires to the lengths, unstrip the ends and solder them onto the LED contacts. **Thread the shrinking tubes onto the stranded wire compound before soldering**
+4. On each soldering spot, apply a big drop of hot glue and spread it across the soldered spot. Repeat this from the bottom, so that the hot glue surrounds the complete soldering point.
+5. Shrink the tube as close to the soldering point as possible with a lighter.
+6. Stick the LEDs onto the desired position. I mounted the front LEDs in a 45 degree angle in order for them to be visible from the side. Then, to secure the strips, I tied the shrinking tube "ends" of the strips to my bike frame.
+
+![backstrip](https://github.com/NickHauptvogel/photON/blob/master/common/IMG_20191029_121302.jpg)
+![frontstrip](https://github.com/NickHauptvogel/photON/blob/master/common/IMG_20191029_121351.jpg)
+

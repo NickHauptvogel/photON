@@ -60,3 +60,42 @@ I mounted the LED ring to the bag and secured the bag with my conventional back 
 10. Done! Proceed to software setup!
 
 ## Software setup
+### Installation
+
+1. Download the CP2102 (CP210x) USB to UART driver (https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers)
+2. Download ArduinoIDE (e.g. from Windows store)
+3. In the IDE, go to File > Preferences.
+4. Paste the URL http://arduino.esp8266.com/stable/package_esp8266com_index.json into the Additional Board Manager URLs field.
+5. Go to Tools > Board > Board Manager and search for 'esp8266'. Select the newest version, and click install.
+6. Install the Neopixel library: Go to Tools > Manage Libraries, search for "Adafruit NeoPixel" and install the newest version by "Adafruit".
+
+### Included Software
+
+Up to now, you are more or less finished and can start writing your own code. Just follow any example tutorial for NeoPixels.
+However, if you want to use my code, feel free to do so. In the following I show you how to configure it.
+
+1. Clone/Download the repo and open the sketch under /src/light_full or /src/light_only_back
+2. Values you have to adapt:
+  a. NUMPIXELS: total number of pixels you have connected
+  b. STASSID: SSID of the hotspot from your phone
+  c. STAPSK: Password of the hotspot
+  d. indices (front/back left/right/ring): positions of the LEDs in your array. If you, e.g., only have 9 LEDs in the front, your NUMPIXELS has to be decreased and the front index have to be adapted (only 9 values, all decreased by 1 on one side)
+  e. The rest is optional and mostly documented in the code, e.g. the color correction values for white (GREEN/BLUE_FACTOR_WHITE_xxx)
+  f. **NOTE: If you copy my LED setup, you only have to change the Access Point Settings**
+  
+Activate the hotspot on your phone and open the serial monitor in the IDE. Then flash the program onto the node. After startup, it will connect to the hotspot and tell you its IP via the serial monitor. Enter that IP in a browser (recommended is Firefox for Android, as Chrome does not support Accelerometer data) and you will get the dashboard of your bike light. Play around!
+
+Features: 
+- Front Light On/Off
+- Back Light On/Off
+- Blink left/right
+- Brake Light (Third bar, gets brighter when braking as well as the LEDs)
+- Automatic On/Off via Ambient Light (Light Value inside the fourth bar)
+
+### Change dashboard
+
+If you want to change the dashboard, you can make your changes in the index.html in /src/webpage/. After that, go to http://davidjwatts.com/youtube/esp8266/esp-convertHTM.html and convert the whole content. The copy the result into the .ino file. This is the string that will be sent by the NodeMCU if somebody connects to it.
+
+## Prospect
+First of all, I thank https://github.com/MrBennetable for the help.
+I will continue to improve the code, and maybe add a brake switch for a manual trigger of the brake light. Moreover, I want to add a hard power off - function for the node in order to just power it off inside the software instead of always plugging the powerbank in and out.

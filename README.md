@@ -1,6 +1,8 @@
 # Project photON
 ###### Smart Bike Light using an ESP8266 and Neopixel LEDs
 
+![requirements](https://github.com/NickHauptvogel/photON/blob/master/common/IMG_20191006_234215.jpg)
+
 In this guide, we will build a custom bike light with Neopixel LEDs and the WiFi Microcontroller ESP8266. This allows you to separately control every single LED with a custom color, make animations etc. 
 
 After the building process, you will find my example code featuring startup animations, blink animations, light control and a accelerometer-controlled brake light, all accessible via a website after the uController connects to your phone's hotspot and acts as a Mini-Webserver.

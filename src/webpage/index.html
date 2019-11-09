@@ -71,8 +71,13 @@
         <script type="text/javascript" language="javascript">
 
             var brakeOnCnt = 0;
+            var brakeOffCnt = 0;
+            var accelerometerValY;
             function accelerometerUpdate(event) {
-              var aY = event.acceleration.y;
+              accelerometerValY = event.acceleration.y;
+            }
+            function checkForAccelerometer() {
+              var aY = accelerometerValY;
               var url_string = window.location.href;
               var url = new URL(url_string);
               var brakeState = url.searchParams.get("brake");
@@ -81,35 +86,45 @@
               if(brakeLimitInt == NaN) {
                 brakeLimitInt = -5;
               }
-              document.getElementById("buttonBrake").innerHTML = brakeLimitInt;
+              var brakeThreshold = url.searchParams.get("brakeThreshold");
+              var brakeThresholdInt = parseInt(brakeThreshold);
+              if(brakeThresholdInt == NaN) {
+                brakeThresholdInt = 3;
+              }
+              document.getElementById("buttonBrake").innerHTML = Math.round(aY) + " " + brakeOnCnt + " " + brakeOffCnt;
               if(aY < brakeLimitInt) {
                 brakeOffCnt = 0;
                 brakeOnCnt++;
-              } 
-			  else if (aY > -1) {
-                brakeOnCnt = 0;
-				brakeOffCnt++;
               }
-              if(brakeOnCnt > 50) {
+              else if (aY > -1) {
                 brakeOnCnt = 0;
-				brakeOffCnt = 0;
-				if(brakeState != "true") {
+				        brakeOffCnt++;
+              }
+              if(brakeOnCnt > brakeThresholdInt) {
+                brakeOnCnt = 0;
+				        brakeOffCnt = 0;
+				        if(brakeState != "true") {
                   insertParam("brake", "true");
                 }
-              } 
-			  else if(brakeOffCnt > 200) {
-				brakeOnCnt = 0;
-				brakeOffCnt = 0;
-				if(brakeState != "false") {
+              }
+			        else if(brakeOffCnt > 10) {
+				      brakeOnCnt = 0;
+              brakeOffCnt = 0;
+              if(brakeState != "false") {
                   insertParam("brake", "false");
-                }
-			  }
+              }
             }
+          }
 
             var lumOncnt = 0;
             var lumOffcnt = 0;
+            var ambientlightVal;
             function ambientLightUpdate(event) {
-              var luminosity = event.value;
+              ambientlightVal = event.value;
+            }
+
+            function checkForAmbientLight() {
+              var luminosity = ambientlightVal;
 
               var url_string = window.location.href;
               var url = new URL(url_string);
@@ -127,7 +142,7 @@
 
               document.getElementById("lum").innerHTML = luminosity + " " + lumOncnt + " " +lumOffcnt;
 
-              if(lumOncnt > 20) {
+              if(lumOncnt > 30) {
                 lumOncnt = 0;
                 lumOffcnt = 0;
                 if (frontState == "off") {
@@ -136,7 +151,7 @@
                 if (backState == "off") {
                   insertParam("back", "on");
                 }
-              } else if (lumOffcnt > 20) {
+              } else if (lumOffcnt > 30) {
                 lumOncnt = 0;
                 lumOffcnt = 0;
                 if (frontState == "on") {
@@ -151,6 +166,9 @@
             function init() {
                 window.addEventListener("devicemotion", accelerometerUpdate, true);
                 window.addEventListener("devicelight", ambientLightUpdate);
+
+                setInterval(checkForAmbientLight, 100);
+                setInterval(checkForAccelerometer, 100);
 
                 var url_string = window.location.href;
                 var url = new URL(url_string);
@@ -264,11 +282,10 @@
         </div>
 
         <div class="frontButton" id="buttonFront" onclick="frontTrigger()">
-            FRONT
+            /&bsol;
         </div>
-
         <div class="backButton" id="buttonBack" onclick="backTrigger()">
-            BACK
+            &bsol;/
         </div>
         <div class="brakeButton" id="buttonBrake"></div>
         <div class="brakeButton" id="lum"></div>

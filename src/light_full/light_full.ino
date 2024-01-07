@@ -350,7 +350,6 @@ void shut_down() {
 boolean WiFiconnected = false;
 
 void setup() {
-
   Serial.begin(115200); //Initialize Serial interface
   delay(1000);
   Serial.println("\n");
@@ -366,9 +365,11 @@ void setup() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
+  flash(ring_index, NUMBER_RING, white, off_color, 2);
+  
   int cnt = 0;
-  while (WiFi.status() != WL_CONNECTED && cnt < 30) {
-    delay(500);
+  while (WiFi.status() != WL_CONNECTED && cnt < 15) {
+    running_light_animation(ring_index, NUMBER_RING, white, true);
     Serial.print(F("."));
     cnt++;
   }
